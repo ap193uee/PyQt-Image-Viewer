@@ -28,11 +28,11 @@ class Iwindow(QtGui.QMainWindow, gui):
 
         self.cntr, self.numImages = -1, -1  # self.cntr have the info of which image is selected/displayed
 
-        self.showMaximized()
         self.image_viewer = ImageViewer(self.qlabel_image)
-        self.connectEvents()
+        self.__connectEvents()
+        self.showMaximized()
 
-    def connectEvents(self):
+    def __connectEvents(self):
         self.open_folder.clicked.connect(self.selectDir)
         self.next_im.clicked.connect(self.nextImg)
         self.prev_im.clicked.connect(self.prevImg)

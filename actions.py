@@ -13,16 +13,16 @@ class ImageViewer:
     def __init__(self, qlabel):
         self.qlabel_image = qlabel                            # widget/window name where image is displayed (I'm usiing qlabel)
         self.qimage_scaled = QImage()                         # scaled image to fit to the size of qlabel_image
-        self.qpixmap = QPixmap(self.qlabel_image.size())      # qpixmap to fill the qlabel_image
+        self.qpixmap = QPixmap()                              # qpixmap to fill the qlabel_image
 
         self.zoomX = 1              # zoom factor w.r.t size of qlabel_image
         self.position = [0, 0]      # position of top left corner of qimage_label w.r.t. qimage_scaled
         self.panFlag = False        # to enable or disable pan
 
         self.qlabel_image.setSizePolicy(QtGui.QSizePolicy.Ignored, QtGui.QSizePolicy.Ignored)
-        self.connectEvents()
+        self.__connectEvents()
 
-    def connectEvents(self):
+    def __connectEvents(self):
         # Mouse events
         self.qlabel_image.mousePressEvent = self.mousePressAction
         self.qlabel_image.mouseMoveEvent = self.mouseMoveAction
@@ -38,6 +38,7 @@ class ImageViewer:
     def loadImage(self, imagePath):
         ''' To load and display new image.'''
         self.qimage = QImage(imagePath)
+        self.qpixmap = QPixmap(self.qlabel_image.size())
         if not self.qimage.isNull():
             # reset Zoom factor and Pan position
             self.zoomX = 1
@@ -54,7 +55,7 @@ class ImageViewer:
         '''
         if not self.qimage_scaled.isNull():
             # check if position is within limits to prevent unbounded panning.
-            px, py = self.position[0], self.position[1]
+            px, py = self.position
             px = px if (px <= self.qimage_scaled.width() - self.qlabel_image.width()) else (self.qimage_scaled.width() - self.qlabel_image.width())
             py = py if (py <= self.qimage_scaled.height() - self.qlabel_image.height()) else (self.qimage_scaled.height() - self.qlabel_image.height())
             px = px if (px >= 0) else 0
@@ -62,7 +63,7 @@ class ImageViewer:
             self.position = (px, py)
 
             if self.zoomX == 1:
-                self.qpixmap.fill(QtCore.Qt.gray)
+                self.qpixmap.fill(QtCore.Qt.white)
 
             # the act of painting the qpixamp
             painter = QPainter()
@@ -93,12 +94,20 @@ class ImageViewer:
 
     def zoomPlus(self):
         self.zoomX += 1
+        px, py = self.position
+        px += self.qlabel_image.width()/2
+        py += self.qlabel_image.height()/2
+        self.position = (px, py)
         self.qimage_scaled = self.qimage.scaled(self.qlabel_image.width() * self.zoomX, self.qlabel_image.height() * self.zoomX, QtCore.Qt.KeepAspectRatio)
         self.update()
 
     def zoomMinus(self):
         if self.zoomX > 1:
             self.zoomX -= 1
+            px, py = self.position
+            px -= self.qlabel_image.width()/2
+            py -= self.qlabel_image.height()/2
+            self.position = (px, py)
             self.qimage_scaled = self.qimage.scaled(self.qlabel_image.width() * self.zoomX, self.qlabel_image.height() * self.zoomX, QtCore.Qt.KeepAspectRatio)
             self.update()
 
