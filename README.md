@@ -14,3 +14,5 @@ To be added:
 Files:
 * *actions.py*: contains ImageViewer class
 * *main.py*: contains implementation of ImageViewer class to show its functionalities and use cases
+
+![Screenshot_1](/icons/Screenshot1.png?raw=true "App Screenshot")
