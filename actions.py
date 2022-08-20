@@ -1,5 +1,6 @@
-from PyQt4.QtGui import QImage, QPixmap, QPainter
-from PyQt4 import QtCore, QtGui
+from PyQt5.QtGui import QImage, QPixmap, QPainter
+from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 __author__ = "Atinderpal Singh"
 __license__ = "MIT"
@@ -19,7 +20,7 @@ class ImageViewer:
         self.position = [0, 0]      # position of top left corner of qimage_label w.r.t. qimage_scaled
         self.panFlag = False        # to enable or disable pan
 
-        self.qlabel_image.setSizePolicy(QtGui.QSizePolicy.Ignored, QtGui.QSizePolicy.Ignored)
+        self.qlabel_image.setSizePolicy(QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Ignored)
         self.__connectEvents()
 
     def __connectEvents(self):
@@ -78,6 +79,7 @@ class ImageViewer:
 
     def mousePressAction(self, QMouseEvent):
         x, y = QMouseEvent.pos().x(), QMouseEvent.pos().y()
+        #print(x,y)
         if self.panFlag:
             self.pressed = QMouseEvent.pos()    # starting point of drag vector
             self.anchor = self.position         # save the pan position when panning starts
@@ -119,3 +121,4 @@ class ImageViewer:
 
     def enablePan(self, value):
         self.panFlag = value
+
